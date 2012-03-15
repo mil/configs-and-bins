@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+
+v = true 
+loop do
+
+	if v then
+		`sudo /usr/bin/lightToggle +`
+		v = false
+	else
+		`sudo /usr/bin/lightToggle -`
+		v = true
+	end
+
+	sleep 0.05
+end

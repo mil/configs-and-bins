@@ -1,0 +1,26 @@
+
+# Update interval in seconds
+update_interval 5.0
+
+# Top Process: ${top name 1}
+# Root: {fs_used /}/${fs_size /} /home ${fs_free /home} /${fs_size /home}
+# Load: ${loadavg 1} ${loadavg 2} ${loadavg 3} 
+# Load: $loadavg
+# Swap: ${swap}/${swapmax} (${swapperc}%)
+# Processes: ${running_processes} / ${processes}
+# CPU: $cpu% 
+# HDD: $diskio_read :Read $diskio_write :Write
+# Temp: Core0: ${exec sensors | awk '/Core 0/ {print $3}'} Core1: ${exec sensors | awk '/Core 1/ {print $3}'}
+# Freq: ${freq cpu0}Mhz
+# Uptime: $uptime
+# Kernel:$kernel on $machine
+# Name: $nodename - $sysname
+
+TEXT
+^fg(\#000000)  ^i(/usr/share/icons/xbm8x8/bt.xbm) ^fg(\#036B0C) ${execi 30 bt} \
+^fg(\#000000)  ^i(/usr/share/icons/xbm8x8/mail.xbm) ^fg(\#005450) ${top name 1} (${processes}) \
+^fg(\#000000)   ^i(/usr/share/icons/xbm8x8/cpu.xbm)^fg(\#A510B3) $cpu% ${freq_g cpu0}Ghz ${freq_g cpu1}Ghz \
+^fg(\#000000)   ^i(/usr/share/icons/xbm8x8/mem.xbm) $mem / ^fg(\#ff0000) $memmax \
+^fg(\#000000)   ^i(/usr/share/icons/xbm8x8/diskette.xbm) ^fg(\#1E2E63)  R:$diskio_read W:$diskio_write \
+^fg(\#000000)   ^i(/usr/share/icons/xbm8x8/clock.xbm) ^fg(\#692E1A) ${time %a %b %d %I:%M%P} \
+^fg(\#000000)  ^i(/usr/share/icons/xbm8x8/bat_full_01.xbm) $battery \

@@ -1,0 +1,5 @@
+#!/bin/bash
+xrandr --output LVDS1 -o normal --pos 0x0 --mode 1280x800 --output DVI1 --pos 0x0 -o normal --mode 1920x1200 --right-of LVDS1 &&
+killall dzen2 &&
+nitrogen --restore &&
+i3-msg -t command restart

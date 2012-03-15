@@ -1,0 +1,2 @@
+#!/bin/bash
+exec conky -c ~/.i3/scripts/conkyrc | dzen2 -fn EnvyCodeR-9 -h 17 -w 1000 -ta r -x 250 -y -1 -fg '#000000' -bg '#ffffff' &
