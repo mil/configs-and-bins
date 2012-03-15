@@ -102,10 +102,8 @@ bindsym $mod+Shift+E exit
 
 for_window [title="pwstore"] floating enable 
 
-
 # resize window (you can also use the mouse for that)
 mode "resize" {
-#exec notify-send "smoke crack"
 
 	bindsym h resize shrink left 10 px or 10 ppt;resize grow   right 10 px or 10 ppt
 		bindsym Shift+H resize grow   left 10 px or 10 ppt;resize shrink right 10 px or 10 ppt
@@ -120,11 +118,8 @@ mode "resize" {
 		bindsym Shift+K resize shrink down 10 px or 10 ppt;resize grow   up 10 px or 10 ppt
 		bindsym k resize grow   down 10 px or 10 ppt;resize shrink up 10 px or 10 ppt
 
-
-
-# back to normal: Enter or Escape
-		bindsym Return mode "default"; exec killall lightShow & /usr/bin/lightToggle -
-		bindsym Escape mode "default"; exec killall lightShow & /usr/bin/lightToggle -
+		bindsym Return mode "default"; exec killall lightShow & lightToggle -
+		bindsym Escape mode "default"; exec killall lightShow & lightToggle -
 }
 
 bindsym $mod+r mode "resize"; exec /usr/bin/lightShow
@@ -133,24 +128,18 @@ bindsym $mod+r mode "resize"; exec /usr/bin/lightShow
 # finds out, if available)
 
 bar {
-		colors {
-			background #ffffff
-				statusline #000000
+	colors {
+		background #ffffff
+			statusline #000000
+			focused_workspace #ffffff #1793D1 
+			active_workspace #ffffff #1793D1 
+			inactive_workspace #222222 #888888
+			urgent_workspace #ffffff #d11931
+	}
 
-
-
-				focused_workspace #ffffff #1793D1 
-				active_workspace #ffffff #1793D1 
-				inactive_workspace #222222 #888888
-				urgent_workspace #ffffff #d11931
-		}
-
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+	font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
 }
 
-
 client.focused        #1793D1     #1240ab #ffffff
 client.focused_inactive    #666666     #666666     #ffffff
-#client.unfocused    #ffffff #333333     #ffffff
-#client.urgent        #D11931     #D11931     #ffffff

@@ -4,10 +4,10 @@ v = true
 loop do
 
 	if v then
-		`sudo /usr/bin/lightToggle +`
+		`sudo lightToggle +`
 		v = false
 	else
-		`sudo /usr/bin/lightToggle -`
+		`sudo lightToggle -`
 		v = true
 	end
 
