@@ -1,4 +1,10 @@
 #!/usr/bin/node
+# A simple and shamless port of Collin Jackon's PwdHash to Node.JS
+# Code was literally dropped from the original implementation into
+# this script to facilitate a command line tool.
+#
+# Some of this code may be un-necessary, but this tool is functional
+# for a CLI pwdhash'er
 var prompt = require('prompt');
 /*
  * Remote PwdHash

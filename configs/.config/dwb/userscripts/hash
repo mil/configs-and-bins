@@ -1,0 +1,8 @@
+#!/usr/bin/ruby
+require 'uri'
+site = (URI).parse(ENV['DWB_URI']).host
+
+password = `zenity --password`
+hashedPassword = `pwdhash #{site} #{password}`.chomp!
+
+STDOUT.puts "open javascript:document.activeElement.value='#{hashedPassword}';"
