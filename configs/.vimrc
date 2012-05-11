@@ -1,5 +1,8 @@
 set nocompatible                " choose no compatibility with legacy vi
 
+set ttyfast
+set ttyscroll=3
+set lazyredraw
 
 syntax enable
 set encoding=utf-8
@@ -34,6 +37,7 @@ map <up> <c-w>-
 map <down> <c-w>+
 map <right> <c-w>>
 map <left> <c-w><
+
 
 " 256 Colors with Wombat
 set t_Co=256
@@ -88,11 +92,11 @@ set laststatus=2
 " now set it up to change the status line based on mode
 if version >= 700
 	au InsertEnter * hi StatusLine term=reverse ctermbg=4 gui=undercurl guisp=Magenta
-	au InsertEnter * silent !sudo lightToggle + & 
+	" au InsertEnter * silent !sudo lightToggle + & 
 	au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
-	au InsertLeave * silent !sudo lightToggle - &
+	" au InsertLeave * silent !sudo lightToggle - &
 
-	au FocusLost * !sudo lightToggle - &
+	" au FocusLost * !sudo lightToggle - &
 
 endif
 
@@ -112,5 +116,14 @@ let g:indent_guides_enable_on_vim_startup = 1
 hi CSVColumnEven term=bold ctermbg=0 ctermfg=10
 hi CSVColumnOdd term=bold ctermbg=2 ctermfg=0
 
-highlight OverLength ctermbg=red ctermfg=white
+highlight OverLength ctermbg=none ctermfg=white
 match OverLength /\%81v.\+/
+
+hi Normal ctermbg=none
+hi LineNr ctermbg=Black
+hi LineNr ctermfg=Blue
+
+fixdel
+imap <Del> <BS>
+
+
