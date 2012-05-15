@@ -5,4 +5,4 @@ site = (URI).parse(ENV['DWB_URI']).host
 password = `zenity --password`
 hashedPassword = `~/bin/pwdhash.js #{site} #{password}`.chomp!
 
-STDOUT.puts "open javascript:document.activeElement.value='#{hashedPassword}';"
+IO.binwrite(ENV['DWB_FIFO'], "open javascript:document.activeElement.value='#{hashedPassword}'")
