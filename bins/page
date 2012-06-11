@@ -1,0 +1,2 @@
+#!/bin/bash
+tail -f -n 500 $1 | regexColorize
