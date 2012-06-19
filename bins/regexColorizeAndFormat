@@ -1,0 +1,59 @@
+#!/usr/bin/ruby
+require 'terminfo'
+# encoding: UTF-8
+# coding: UTF-8
+
+if RUBY_VERSION =~ /1.9/
+    Encoding.default_external = Encoding::UTF_8
+    Encoding.default_internal = Encoding::UTF_8
+end
+#Uber simway to colorize outputin
+class String
+	def color(c)
+		colors = { 
+			:black   => 30, 
+			:red     => 31, 
+			:green   => 32, 
+			:yellow  => 33, 
+			:blue    => 34, 
+			:magenta => 35, 
+			:cyan    => 36, 
+			:white   => 37 
+		}
+		return "\e[#{colors[c] || c}m#{self}\e[0m"
+	end
+end
+
+
+ARGF.each_with_index do |line, count|
+	line.match(/^(.+)\s(\d{2}:\d{2})\s+(\S+)(.+)/)
+
+
+	user = $3
+	if (user.length >	14) then
+		user = user[0..14]
+	end
+	(15 - $3.length).times do |j|
+		user = "#{user} "
+	end
+
+
+	startLength = $1.length + $2.length + user.length + 4
+	contentSize = TermInfo.screen_size[1] - startLength - 3
+
+	content = $4
+
+	overflow = []
+	while (content.length > contentSize) do  
+		overflow.push(content[(content.length - contentSize)..content.length])
+		content = content[0..content.length - contentSize]
+	end
+
+		puts "#{$1.color(:red)} #{$2} #{user.color(:magenta)} #{content}"
+		overflow.each do |remain|
+			startLength.times do |j|
+				print " "
+			end
+			puts remain
+		end
+end
