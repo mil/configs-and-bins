@@ -1,34 +1,15 @@
+### ZSH Options
 
+#Promptinit
 autoload -U promptinit
 promptinit
 
- setopt extendedglob
- zmodload -a colors
- zmodload -a autocomplete
- zmodload -a complist
 
-
-autoload -U colors colors
-
-autoload colors zsh/terminfo
-if [[ "$terminfo[colors]" -ge 8 ]]; then
-    colors
-fi
-for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-    eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-    eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
-    (( count = $count + 1 ))
-done
-
-PR_NO_COLOR="%{$terminfo[sgr0]%}"
-
-
+#Auto Completej
+setopt extendedglob
+zmodload -a autocomplete
+zmodload -a complist
 zmodload zsh/complist
-
-
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable hg git bzr svn
-
 
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors 'reply=( "=(#b)(*$VAR)(?)*=00=$color[green]=$color[bg-green]" )'
@@ -41,90 +22,99 @@ zstyle ":completion:*:*:$command:*:$tag" list-colors "=(#b)\
 =$color_number_for_letters_in_first_bracket-pair\
 =$color_number_for_letters_in_second_bracket-pair"     "..."
 
-
 setopt correctall
 setopt COMPLETE_IN_WORD
 setopt ALWAYS_TO_END
 setopt INC_APPEND_HISTORY #share hist
 setopt SHARE_HISTORY #share hist
 
-#Copy XDefaults Colors if not in X
-if [ "$TERM" = "linux" ]; then
-    _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
-    for i in $(sed -n "$_SEDCMD" $HOME/.Xdefaults | \
-               awk '$1 < 16 {printf "\\e]P%X%s", $1, $2}'); do
-        echo -en "$i"
-    done
-    clear
+zstyle ':completion:*' menu select
+setopt completealiases
+
+
+autoload -U compinit
+compinit
+
+#Colors
+zmodload -a colors
+autoload -U colors colors
+autoload colors zsh/terminfo
+if [[ "$terminfo[colors]" -ge 8 ]]; then
+    colors
 fi
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+    eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+    eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
+    (( count = $count + 1 ))
+done
+PR_NO_COLOR="%{$terminfo[sgr0]%}"
 
 
 
- #key bindings
- bindkey "\e[1~" beginning-of-line
- bindkey "\e[4~" end-of-line
- bindkey "\e[5~" beginning-of-history
- bindkey "\e[6~" end-of-history
- bindkey "\e[3~" delete-char
- bindkey "\e[2~" quoted-insert
- bindkey "\e[5C" forward-word
- bindkey "\eOc" emacs-forward-word
- bindkey "\e[5D" backward-word
- bindkey "\eOd" emacs-backward-word
- bindkey "\e\e[C" forward-word
- bindkey "\e\e[D" backward-word
- # for rxvt
- bindkey "\e[8~" end-of-line
- bindkey "\e[7~" beginning-of-line
- # for non RH/Debian xterm, can't hurt for RH/DEbian xterm
- bindkey "\eOH" beginning-of-line
- bindkey "\eOF" end-of-line
- # for freebsd console
- bindkey "\e[H" beginning-of-line
- bindkey "\e[F" end-of-line
- # completion in the middle of a line
- # bindkey '^i' expand-or-complete-prefix
 
+#Version Control Shit
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable hg git bzr svn
+
+
+
+#VARIABLES
+export TZ="America/New_York"
 export HISTSIZE=2000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 
-
 export EDITOR="vim -u ~/.vimrc"
-export BROWSER="uzbl-tabbed"
+export BROWSER="dwb"
 
+
+
+
+###PATH
 export PATH="/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/sbin/:$PATH"
-export PATH="/usr/lib/cw:$PATH"
-export PATH="/home/miles/bin:$PATH"
-export TZ="America/New_York"
+export PATH="/usr/bin/vendor_perl:$PATH" #ls++
+export PATH="/usr/lib/cw:$PATH" #Colorized output
 
-alias back='cd "$OLDPWD";pwd'
+export PATH="/home/mil/bin/data:$PATH"
+export PATH="/home/mil/bin/downloaded:$PATH"
+export PATH="/home/mil/bin/misc:$PATH"
+export PATH="/home/mil/bin/symlinks:$PATH"
+export PATH="/home/mil/bin/system:$PATH"
+export PATH="/home/mil/bin/util:$PATH"
+export PATH="/home/mil/bin/wm:$PATH"
+export PATH="/home/mil/bin/x:$PATH"
+
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+PATH=$PATH:/home/mil/.gem/ruby/1.9.1/bin
+export PATH
+
+
+
+
+### ALIASES 
 alias ls='ls++'
+alias v='vim'
+alias back='cd "$OLDPWD";pwd'
 alias grep='grep --colour'
 alias tree='tree -C'
 alias pacman='pacman-color'
-
-#alias dualscreen='xrandr --output LVDS1 -o normal --pos 0x0 --mode 1280x800 --output DVI1 --pos 0x0 -o normal --mode 1920x1200 --right-of LVDS1'
-alias triplescreen='xrandr --output LVDS1 -o normal --pos 0x0 --mode 1280x800 --output DVI1 --pos 0x0 -o normal --mode 1920x1200 --right-of LVDS1 --output TV1 --pos 0x0 -o normal --mode 1024x768 --right-of DVI1'
-
-alias singlescreen='xrandr --output LVDS1 -o normal --pos 0x0 --mode 1280x800 --output DVI1 --off'
-
-alias btkeyboard='sudo hidd --connect 00:1B:63:FD:2E:E5'
-
-alias notes-update='cd /home/miles/Dropbox && mksite notes && rsync -rv --delete notes/output/* bladdo@bladdo.net:/home/bladdo/notes.bladdo.net/'
-
 alias vim='vim -u ~/.vimrc'
+alias gcalc='pwdhash google.com | sed -n 2p | xargs -0 -I XXX gcalcli --user miles.sandlar@gmail.com --pw XXX'
+
+alias mwm='exec /home/mil/repos/github/mwm/mwm'
+
+
+
+### FUNCTIONS
 
 # PWDHash and PWDClip
 pwdclip() {
-    node ~/bin/pwdhash.js $* | sed -n 2p | tr -d '\n' | xclip -sel clip
+    pwdhash $* | sed -n 2p | tr -d '\n' | xclip -sel clip
     #notify-send "clipped hash:: $1"
     echo "clippd"
 }
-
-#PWDHash Password used for gcalc and stored username
-alias gcalc='pwdhash google.com | sed -n 2p | xargs -0 -I XXX gcalcli --user miles.sandlar@gmail.com --pw XXX'
-
 
 # Extract Stuff
 extract () {
@@ -143,24 +133,28 @@ if [ -f $1 ]; then
              *.7z)        7z x $1    ;;
              *)           echo "'$1' cannot be extracted via extract()" ;;
          esac
-else
+	else
          echo "'$1' is not a valid file"
 fi
 }
 
-# Define Stuff
-define () {
-lynx -dump "http://www.google.com/search?hl=en&q=define%3A+${1}&btnG=Google+Search" | grep -m 3 -w "*"  | sed 's/;/ -/g' | cut -d- -f1 > /tmp/templookup.txt
-            if [[ -s  /tmp/templookup.txt ]] ;then    
-                until ! read response
-                    do
-                    echo "${response}"
-                    done < /tmp/templookup.txt
-                else
-                    echo "Sorry $USER, I can't find the term \"${1} \""                
-            fi    
-rm -f /tmp/templookup.txt
-}
+
+###ZSH PLUGINS
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlight/zsh-syntax-highlighting.zsh
+
+#source /home/mil/.zsh/auto-fu.zsh
+#zle-line-init () {auto-fu-init;}; zle -N zle-line-init
+#zstyle ':completion:*' completer _oldlist _complete
+#zle -N zle-keymap-select auto-fu-zle-keymap-select
+
+
+###MISC
+
+#VIM COMPATIBILITY & Inline Keybindings
+set -o vi
+bindkey -v
+
 
 #Xdefaults colors in console
 if [ "$TERM" = "linux" ]; then
@@ -171,11 +165,6 @@ if [ "$TERM" = "linux" ]; then
     done
     clear
 fi
-
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-
 THSTATUS=`tput tsl`
 FHSTATUS=`tput fsl`
 
@@ -191,18 +180,10 @@ preexec() {
     set_xterm_title "urxvt< %n@%m: %50>...>$1%<<"
 }
 
-precmd() {
-    set_xterm_title "urxvt> %n@%m: %50<...<%~%<<"
-    echo -e "\e[1;30m\e[1;43m`sh /home/miles/.scmstatus $PWD`"
-}
-
-
 PROMPT=""
 RPROMPT=""
 setopt prompt_subst
 
-
-fortune futurama 
 
 #key setups
 # bindkey SO HERE'S HOW I CONFIGURED THE PROMPT FOR ZSH:-v # vi key bindings
@@ -218,29 +199,40 @@ bindkey '\e[3~' delete-char
 #home
 bindkey '\e[1~' beginning-of-line
 
-PROMPT=""
-RPROMPT=""
-setopt prompt_subst
 
-set -A prompt_array \
-    "%{$bg[green]%}%{$fg[black]%}%n%{$fg[default]%}" \
-    "%{$bg[white]%}%{$fg[black]%}@" \
-    "%{$bg[blue]%}%{$fg[black]%}%m%{$fg[default]%}" \
-    "%{$terminfo[sgr0]%}" \
-    "%{$fg[black]%}%{$bg[red]%}>%{$bg[default]%} "
+figlet `hostname`
 
 
-set -A rprompt_array \
-    "%{$terminfo[bold]%}" \
-    "%0(?..%{$fg[red]%}%?) " \
-    "%U%{$bg[black]%}%{$fg[white]%}%~%u " \
-    "%{$bg[white]%}%{$fg[black]$terminfo[bold]%}%D{%l:%M%p}%{$terminfo[sgr0]%}" \
-    "%{$vcs_info_msg_0_%}"
-  
-for i in $prompt_array; do PROMPT=${PROMPT}${i} done
-for i in $rprompt_array; do RPROMPT=${RPROMPT}${i} done
+local IT="${terminfo[sitm]}${terminfo[bold]}"
+local ST="${terminfo[sgr0]}${terminfo[ritm]}"
 
-#VI Inline
-set -o vi
-bindkey -v
+local FMT_BRANCH="%F{9}(%s:%F{7}%{$IT%}%r%{$ST%}%F{9}) %F{11}%B%b %K{235}%{$IT%}%u%c%{$ST%}%k"
+local FMT_ACTION="(%F{3}%a%f)"
+local FMT_PATH="%F{1}%R%F{2}/%S%f"
+
+setprompt() {
+  local USER="%(#.%F{1}.%F{3})%n%f"
+  local HOST="%F{1}%M%f"
+  local PWD="%F{7}$($XDG_CONFIG_HOME/zsh/rzsh_path)%f"
+  local TTY="%F{4}%y%f"
+  local EXIT="%(?..%F{202}%?%f)"
+  local PRMPT="${USER}@$HOST:${TTY}: ${PWD}
+${EXIT} %F{202}»%f "
+
+  if [[ "${vcs_info_msg_0_}" == "" ]]; then
+    PROMPT="$PRMPT"
+  else
+    PROMPT="${vcs_info_msg_0_}
+$PRMPT"
+  fi
+}
+
+
+
+precmd() {
+    set_xterm_title "urxvt> %n@%m: %50<...<%~%<<"
+    echo -e "\e[1;30m\e[1;43m`sh /home/mil/bin/system/scmstatus $PWD`"
+		setprompt
+}
+
 
